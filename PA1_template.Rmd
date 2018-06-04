@@ -5,7 +5,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 # Setting global options
-knitr::opts_chunk$set(echo = TRUE,fig.path=".")
+knitr::opts_chunk$set(echo = TRUE,self.contained=TRUE)
 options(scipen=1,digits=2)
 
 ```
