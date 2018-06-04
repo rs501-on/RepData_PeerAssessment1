@@ -5,15 +5,11 @@ output:
     keep_md: yes
 ---
 
-```{r setup, include=FALSE}
-# Setting global options
-knitr::opts_chunk$set(echo = TRUE,self.contained = FALSE,fig.path = "figures/")
-options(scipen=1,digits=2)
 
-```
 
 ### Reading and processing data
-```{r}
+
+```r
 # Reading activity data
 activityData <- read.csv("activity.csv")
 ```
@@ -22,46 +18,57 @@ activityData <- read.csv("activity.csv")
 ## What is mean total number of steps taken per day?
 
 ### Calculating the total number of steps per day, plotting histogram, mean and median
-```{r}
+
+```r
 # Sum up the total steps by date
 aggActivity <- aggregate(steps ~ date, data = activityData,sum)
 
 # Show histogram of steps per day
 hist(aggActivity$steps, main="Histogram of total number of steps taken each day", xlab="Total steps each day", ylab="Count")
+```
 
+![](figures/unnamed-chunk-2-1.png)<!-- -->
+
+```r
 # Calculate the mean and median of the total steps per day
 stepsMean <- mean(aggActivity$steps)
 stepsMedian <- median(aggActivity$steps)
-
 ```
-#### The mean of the total number of steps per day is `r stepsMean` and median is `r stepsMedian`.
+#### The mean of the total number of steps per day is 10766.19 and median is 10765.
 
 
 ## What is the average daily activity pattern?
 
 ### Calculating average and plotting time series plot
 
-```{r}
+
+```r
 # Average the number of steps by interval
 avgActivity <- aggregate(steps ~ interval, data = activityData,mean)
 
 # Plot the average activity
 plot(avgActivity$interval,avgActivity$steps, type = "l", main="Average steps taken during 5 minute interval", xlab="Interval",ylab = "Average steps taken")
+```
 
+![](figures/unnamed-chunk-3-1.png)<!-- -->
+
+```r
 maxStepInterval <- avgActivity$interval[which.max(avgActivity$steps)]
 ```
-### The interval with the highest average number of steps is `r maxStepInterval`.
+### The interval with the highest average number of steps is 835.
 
 
 ## Inputing missing values
-```{r}
+
+```r
 # Finding number of NA step values in activity data
 missingValues <- sum(is.na(activityData$steps))
 ```
-### The number of measurements having missing values is `r missingValues`
+### The number of measurements having missing values is 2304
 
 ### Finding NA values and substituting with interval mean of that 5 minute interval
-```{r}
+
+```r
 # Create new dataset
 filledActivityData <- activityData
 
@@ -75,26 +82,31 @@ for (i in 1:nrow(filledActivityData)) {
 ```
 
 ### From new filled data, plot new histogram and find mean and median
-```{r}
+
+```r
 # Sum up the total steps by date
 filledAggActivity <- aggregate(steps ~ date, data = filledActivityData,sum)
 
 # Show histogram of steps per day
 hist(filledAggActivity$steps, main="Histogram of total number of steps taken each day", xlab="Total steps each day", ylab="Count")  
+```
 
+![](figures/unnamed-chunk-6-1.png)<!-- -->
+
+```r
 # Calculate the new mean and median of the total steps per day
 filledStepsMean <- mean(filledAggActivity$steps)
 filledStepsMedian <- median(filledAggActivity$steps)
-
 ```
 
-#### The mean of the total number of steps per day is `r filledStepsMean` and median is `r filledStepsMedian`.
+#### The mean of the total number of steps per day is 10766.19 and median is 10766.19.
 
 ### After filling in missing values, the mean has stayed the same, but the median has moved and become equal to the mean.
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
-```{r}
+
+```r
 # Add weekday variables based on date
 filledActivityData$day <- weekdays(as.Date(filledActivityData$date))
 
@@ -103,11 +115,11 @@ filledActivityData$daytype <- "weekday"
 
 # Change weekdaytype variable to weekend for Saturday and Sunday
 filledActivityData$daytype[filledActivityData$day %in% c("Saturday", "Sunday")] <- "weekend"
-
 ```
 
 ### From new filled data, plot new histogram and find mean and median
-```{r}
+
+```r
 suppressWarnings(library(ggplot2))
 # Group steps by weekdaytype and interval
 
@@ -121,3 +133,5 @@ qplot(interval, steps, data=dayAggActivity,
       main="Average steps taken Weekends vs. Weekdays",
       facets =daytype ~ .)
 ```
+
+![](figures/unnamed-chunk-8-1.png)<!-- -->
