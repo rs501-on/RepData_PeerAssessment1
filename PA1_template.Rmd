@@ -1,10 +1,11 @@
 ---
 title: "Reproducible research: Peer Assessment 1"
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
 # Setting global options
-knitr::opts_chunk$set(echo = TRUE,fig.path = 'figures/')
+knitr::opts_chunk$set(echo = TRUE,fig.path=".")
 options(scipen=1,digits=2)
 
 ```
